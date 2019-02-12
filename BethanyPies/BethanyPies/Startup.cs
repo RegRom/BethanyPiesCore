@@ -1,6 +1,7 @@
 ﻿using BethanyPies.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +24,8 @@ namespace BethanyPies
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<IPieRepository, PieRepository>();
             services.AddTransient<IFeedbackRepository, FeedbackRepository>();
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>();
 
             services.AddMvc();
         }
@@ -33,6 +36,8 @@ namespace BethanyPies
             app.UseDeveloperExceptionPage();
             app.UseStatusCodePages();
             app.UseStaticFiles();
+            app.UseAuthentication();
+
             app.UseMvc(routes =>
                 {
                     routes.MapRoute(
